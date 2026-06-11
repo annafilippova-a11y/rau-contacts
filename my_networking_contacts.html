@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>Мої контакти — CLUST Networking</title>
+<style>
+  :root {
+    --bg: #f5f5f3; --surface: #ffffff; --ink: #1a1a1a; --muted: #6b7280;
+    --line: #e5e7eb; --accent: #16a34a; --accent-light: #dcfce7;
+    --radius: 16px; --shadow: 0 1px 3px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.07);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; line-height: 1.5; }
+  header { position: sticky; top: 0; z-index: 20; background: rgba(245,245,243,.92); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .header-inner { max-width: 1200px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .logo { font-weight: 800; font-size: 20px; letter-spacing: -.03em; color: var(--ink); }
+  .logo span { color: var(--accent); }
+  .badge { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; }
+  .hero { max-width: 1200px; margin: 0 auto; padding: 36px 24px 20px; }
+  .hero h1 { font-size: clamp(26px, 4vw, 40px); font-weight: 750; letter-spacing: -.03em; line-height: 1.1; margin-bottom: 10px; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p { color: var(--muted); font-size: 15px; max-width: 500px; }
+  .stats { max-width: 1200px; margin: 0 auto; padding: 0 24px 24px; display: flex; gap: 24px; flex-wrap: wrap; }
+  .stat { display: flex; flex-direction: column; }
+  .stat-n { font-size: 28px; font-weight: 750; letter-spacing: -.03em; color: var(--ink); }
+  .stat-l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+  .filter-bar { max-width: 1200px; margin: 0 auto; padding: 0 24px 20px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .filter-btn { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 7px 14px; font-size: 13px; cursor: pointer; white-space: nowrap; font-weight: 500; transition: all .15s; font-family: inherit; }
+  .filter-btn:hover { border-color: #9ca3af; }
+  .filter-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 320px; margin-left: auto; }
+  .search-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+  .search-input { width: 100%; border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 8px 12px 8px 36px; font-size: 14px; color: var(--ink); outline: none; font-family: inherit; transition: border-color .15s; }
+  .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(22,163,74,.1); }
+  .grid { max-width: 1200px; margin: 0 auto; padding: 0 24px 64px; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; display: flex; flex-direction: column; gap: 14px; box-shadow: var(--shadow); transition: transform .15s, box-shadow .15s; }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,.08), 0 16px 32px rgba(0,0,0,.08); }
+  .card.hidden { display: none; }
+  .chead { display: flex; gap: 14px; align-items: flex-start; }
+  .avatar { width: 48px; height: 48px; border-radius: 14px; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: #fff; letter-spacing: -.01em; }
+  .who { min-width: 0; flex: 1; }
+  .cname { font-weight: 700; font-size: 17px; letter-spacing: -.02em; line-height: 1.2; }
+  .crole { color: var(--muted); font-size: 13px; margin-top: 2px; line-height: 1.35; }
+  .ccompany { font-size: 13px; font-weight: 600; margin-top: 3px; }
+  .ccompany a { color: var(--accent); text-decoration: none; }
+  .ccompany a:hover { text-decoration: underline; }
+  .tags { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
+  .shortlisted-badge { display: inline-flex; align-items: center; gap: 5px; background: var(--accent-light); color: var(--accent); border-radius: 999px; font-size: 11.5px; font-weight: 600; padding: 4px 10px; }
+  .cat-tag { display: inline-flex; align-items: center; background: #f3f4f6; color: #374151; border-radius: 999px; font-size: 11.5px; font-weight: 500; padding: 3px 10px; }
+  .cat-tag.clevel { background: #eff6ff; color: #1d4ed8; }
+  .pitch { font-size: 13.5px; color: #374151; line-height: 1.55; border-left: 2px solid var(--line); padding-left: 10px; }
+  .contacts { display: flex; flex-direction: column; gap: 7px; }
+  .contact-row { display: flex; align-items: center; gap: 9px; font-size: 13.5px; }
+  .contact-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+  .ci-phone { background: #dcfce7; color: #15803d; }
+  .ci-email { background: #dbeafe; color: #1d4ed8; }
+  .ci-tg { background: #e0f2fe; color: #0284c7; }
+  .contact-val { color: var(--ink); word-break: break-all; }
+  a.contact-val { color: var(--accent); text-decoration: none; }
+  a.contact-val:hover { text-decoration: underline; }
+  .industry-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+  .industry-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex: 0 0 auto; }
+  .empty { display: none; max-width: 1200px; margin: 0 auto; padding: 60px 24px; text-align: center; color: var(--muted); font-size: 15px; }
+  .empty.show { display: block; }
+  @media (max-width: 600px) {
+    .header-inner, .hero, .stats, .filter-bar { padding-left: 16px; padding-right: 16px; }
+    .grid { padding: 0 16px 48px; grid-template-columns: 1fr; }
+    .search-wrap { min-width: unset; max-width: unset; margin-left: 0; width: 100%; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="logo">CLUST <span>★</span></div>
+    <div class="badge">Мої контакти</div>
+  </div>
+</header>
+<div class="hero">
+  <h1>Networking<br><em>Shortlist</em></h1>
+  <p>Контакти, відмічені під час заходу CLUST</p>
+</div>
+<div class="stats">
+  <div class="stat"><span class="stat-n" id="total-count">50</span><span class="stat-l">Контактів</span></div>
+  <div class="stat"><span class="stat-n">40</span><span class="stat-l">Компаній</span></div>
+  <div class="stat"><span class="stat-n">12</span><span class="stat-l">Індустрій</span></div>
+</div>
+<div class="filter-bar">
+  <button class="filter-btn active" data-filter="all" onclick="filterCards(this)">Всі</button>
+  <button class="filter-btn" data-filter="manager" onclick="filterCards(this)">Керівники & Менеджери</button>
+  <button class="filter-btn" data-filter="specialist" onclick="filterCards(this)">Спеціалісти & Фахівці</button>
+  <button class="filter-btn" data-filter="clevel" onclick="filterCards(this)">Власник & C-Level</button>
+  <div class="search-wrap">
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.7"/><path d="m16.5 16.5 4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+    <input class="search-input" type="text" placeholder="Пошук за ім'ям або компанією…" oninput="searchCards(this.value)"/>
+  </div>
+</div>
+<div class="grid" id="grid">
+
+  <div class="card" data-category="manager" data-search="artem pysarev enterprise account executive creatio creatio crm b2b">
+    <div class="chead">
+      <div class="avatar" style="background:#2563eb">AP</div>
+      <div class="who">
+        <div class="cname">Artem Pysarev</div>
+        <div class="crole">Enterprise Account Executive</div>
+        <div class="ccompany"><a href="https://www.creatio.com" target="_blank" rel="noopener">Creatio ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Зацікавлений у знайомстві з Власник & C-Level, Спеціалісти & Фахівці, Керівники & Менеджери. Ціль: знайомитися з новими цікавими людьми.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">+380995464026</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:a.pysarev@creatio.com">a.pysarev@creatio.com</a></div>
+    </div>
+  </div>
+  <div class="card" data-category="clevel" data-search="евеліна галоян генеральний директор групи компаній бетта директор">
+    <div class="chead">
+      <div class="avatar" style="background:#7c3aed">ЕГ</div>
+      <div class="who">
+        <div class="cname">Евеліна Галоян</div>
+        <div class="crole">Генеральний директор групи компаній</div>
+        <div class="ccompany"><a href="https://betta.ua" target="_blank" rel="noopener">Бетта ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag clevel">Власник & C-Level</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Зацікавлена у знайомстві з Керівниками & Менеджерами. Ціль: знайомитися з новими цікавими людьми.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0504066520</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:e.galoian@betta.ua">e.galoian@betta.ua</a></div>
+    </div>
+  </div>
+  <div class="card" data-category="specialist" data-search="тимофій вознесенський маркетолог · crm & retention goodwine crm retention ecommerce">
+    <div class="chead">
+      <div class="avatar" style="background:#059669">ТВ</div>
+      <div class="who">
+        <div class="cname">Тимофій Вознесенський</div>
+        <div class="crole">Маркетолог · CRM & Retention</div>
+        <div class="ccompany"><a href="https://goodwine.com.ua" target="_blank" rel="noopener">goodwine ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Спеціалісти & Фахівці</span>
+    </div>
+    <div class="pitch">Експерт у Retention and CRM. Зацікавлений у знайомстві зі Спеціалістами & Фахівцями, Керівниками & Менеджерами.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0931198507</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:voznesenskiytim@gmail.com">voznesenskiytim@gmail.com</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Електронна комерція (e-commerce)</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="яна донченко керівниця відділу маркетингу пчілка маркет маркетинг">
+    <div class="chead">
+      <div class="avatar" style="background:#dc2626">ЯД</div>
+      <div class="who">
+        <div class="cname">Яна Донченко</div>
+        <div class="crole">Керівниця відділу маркетингу</div>
+        <div class="ccompany"><a href="https://pchelka.market" target="_blank" rel="noopener">Пчілка маркет ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Зацікавлена у знайомстві з Керівниками & Менеджерами. Ціль: знайомитися з новими цікавими людьми.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0977297673</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:yasiadonchenko@gmail.com">yasiadonchenko@gmail.com</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Ритейл</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="катерина мединська начальник управління клієнтського досвіду ukrnafta лояльність клієнтський досвід">
+    <div class="chead">
+      <div class="avatar" style="background:#0891b2">КМ</div>
+      <div class="who">
+        <div class="cname">Катерина Мединська</div>
+        <div class="crole">Начальник управління клієнтського досвіду</div>
+        <div class="ccompany"><a href="https://ukrnafta.com" target="_blank" rel="noopener">UKRNAFTA ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Програми лояльності, партнерська співпраця, обмін знижками. Шукає партнерів та цікаві проєкти.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">380634256808</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:Kateryna.Medynska@Ukrnafta.com">Kateryna.Medynska@Ukrnafta.com</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Медіа та маркетинг</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="ігор мельничук операційний директор (coo) hey becca coo cfo операційний">
+    <div class="chead">
+      <div class="avatar" style="background:#b45309">ІМ</div>
+      <div class="who">
+        <div class="cname">Ігор Мельничук</div>
+        <div class="crole">Операційний директор (COO)</div>
+        <div class="ccompany"><a href="https://heybecca.ua" target="_blank" rel="noopener">Hey Becca ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">5+ років у ритейлі: CFO→CBDO→COO. Експерт у оптимізації бізнес-процесів. Шукає партнерства у retail, HoReCa, entertainment та family leisure.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">+380736515500</span></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Ритейл / HoReCa / Entertainment</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="вікторія присяжна head of business development devlight bizdev розробка">
+    <div class="chead">
+      <div class="avatar" style="background:#7c3aed">ВП</div>
+      <div class="who">
+        <div class="cname">Вікторія Присяжна</div>
+        <div class="crole">Head of Business Development</div>
+        <div class="ccompany"><a href="https://devlight.io" target="_blank" rel="noopener">Devlight ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Зацікавлена у знайомстві з Власник & C-Level. Ціль: знайомитися з новими цікавими людьми.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0985762682</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:viktoria.prysiazhna@devlight.io">viktoria.prysiazhna@devlight.io</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Інновації та технології</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="олександр янковський провідний менеджер з розвитку мереж вчасно.edi вчасно сервіс edi едо документообіг">
+    <div class="chead">
+      <div class="avatar" style="background:#2563eb">ОЯ</div>
+      <div class="who">
+        <div class="cname">Олександр Янковський</div>
+        <div class="crole">Провідний менеджер з розвитку мереж Вчасно.EDI</div>
+        <div class="ccompany"><a href="https://edi.vchasno.ua" target="_blank" rel="noopener">ВЧАСНО СЕРВІС ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Допоможу мережі впровадити EDI. Експерт у EDI, ЕДО, КЕП, ПРРО та еТТН. Шукає мережі, які ще не використовують сервіс Вчасно.EDI.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">+380633827682</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:o.yankovskyi@vchasno.ua">o.yankovskyi@vchasno.ua</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Інновації та технології</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="зоя кобець country manager yieldigo b2b продажі штучний інтелект">
+    <div class="chead">
+      <div class="avatar" style="background:#059669">ЗК</div>
+      <div class="who">
+        <div class="cname">Зоя Кобець</div>
+        <div class="crole">Country Manager</div>
+        <div class="ccompany"><a href="https://yieldigo.com" target="_blank" rel="noopener">Yieldigo ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">10+ років у B2B-продажах та розвитку бізнесу в tech-компаніях. Оптимізація цін, промо та запасів за допомогою ШІ. Шукає партнерства у ритейлі України.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0936003090</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:zoia.kobets@yieldigo.com">zoia.kobets@yieldigo.com</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Ритейл / Технології (AI)</span></div>
+  </div>
+  <div class="card" data-category="specialist" data-search="ольга молоченко менеджер з маркетингу yves rocher косметика beauty">
+    <div class="chead">
+      <div class="avatar" style="background:#be185d">ОМ</div>
+      <div class="who">
+        <div class="cname">Ольга Молоченко</div>
+        <div class="crole">Менеджер з маркетингу</div>
+        <div class="ccompany"><a href="https://yves-rocher.ua" target="_blank" rel="noopener">Yves Rocher ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Спеціалісти & Фахівці</span>
+    </div>
+    <div class="pitch">Шукає партнерів. Зацікавлена у знайомстві з: Спеціалісти & Фахівці, Керівники & Менеджери.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-tg"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21.8 3.2 2.4 10.6c-1.3.5-1.3 1.3-.2 1.6l4.9 1.5 1.9 5.7c.2.7.4.9 1 .9.4 0 .7-.2 1-.5l2.9-2.8 5 3.7c.9.5 1.6.2 1.8-.8l3.2-15.1c.3-1.3-.5-1.9-1.1-1.6z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></div><span class="contact-val">@Olga0321 (Telegram)</span></div>
+    </div>
+  </div>
+  <div class="card" data-category="clevel" data-search="шибецкая наталия директор кідландія кідландія боулінг skymall">
+    <div class="chead">
+      <div class="avatar" style="background:#0f766e">НШ</div>
+      <div class="who">
+        <div class="cname">Шибецкая Наталия</div>
+        <div class="crole">Директор</div>
+        <div class="ccompany"><a href="https://kidlandia.ua" target="_blank" rel="noopener">Кідландія ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag clevel">Власник & C-Level</span>
+    </div>
+    <div class="pitch">Операційний директор Кідландії та боулінгу у SkyMall. Відповідаю за операційне управління, фінанси, команду, сервіс, продажі та розвиток розважальних проєктів. Шукає нові партнерства у retail, HoReCa, entertainment та family leisure.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">+380999088489</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:natali.kokos@gmail.com">natali.kokos@gmail.com</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Розваги / Entertainment</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="анна держун керівник відділу маркетингу трц retroville торговий центр маркетинг">
+    <div class="chead">
+      <div class="avatar" style="background:#9333ea">АД</div>
+      <div class="who">
+        <div class="cname">Анна Держун</div>
+        <div class="crole">Керівник відділу маркетингу</div>
+        <div class="ccompany"><a href="https://retroville.com.ua" target="_blank" rel="noopener">ТРЦ Retroville ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Зацікавлена у знайомстві з Керівниками & Менеджерами. Ціль: знайомитися з новими цікавими людьми.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0504478013</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:A.derzhun@retroville.ua">A.derzhun@retroville.ua</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Ритейл / ТРЦ</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="григорій онишко head of sales vodafone retail vodafone продажі">
+    <div class="chead">
+      <div class="avatar" style="background:#1d4ed8">ГО</div>
+      <div class="who">
+        <div class="cname">Григорій Онишко</div>
+        <div class="crole">Head of Sales</div>
+        <div class="ccompany"><a href="https://vodafone.ua" target="_blank" rel="noopener">Vodafone Retail ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Зацікавлений у знайомстві з Власник & C-Level, Спеціалісти & Фахівці, Керівники & Менеджери. Ціль: знайомитися з новими цікавими людьми.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0990900929</span></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Телеком / Ритейл</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="роман ханжин partnership manager аврора партнерства аврора">
+    <div class="chead">
+      <div class="avatar" style="background:#0e7490">РХ</div>
+      <div class="who">
+        <div class="cname">Роман Ханжин</div>
+        <div class="crole">Partnership Manager</div>
+        <div class="ccompany"><a href="https://avrora.ua" target="_blank" rel="noopener">Аврора ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Зацікавлений у знайомстві з Власник & C-Level, Керівники & Менеджери. Ціль: обмін знаннями/ідеями.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">+380994192772</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:r.khanzhyn@avrora.ua">r.khanzhyn@avrora.ua</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Нерухомість та девелопмент</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="viacheslav mironchenko head of pmo rozetkapay pmo rozetkapay payments fintech">
+    <div class="chead">
+      <div class="avatar" style="background:#7c2d12">VM</div>
+      <div class="who">
+        <div class="cname">Viacheslav Mironchenko</div>
+        <div class="crole">Head of PMO</div>
+        <div class="ccompany"><a href="https://rozetkapay.com" target="_blank" rel="noopener">RozetkaPay ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Тема для обговорення: чи готовий український ритейл перейти з введення карткових даних на токени під час оплати в інтернеті?</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">+380735912736</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:v.mironchenko@rozetkapay.com">v.mironchenko@rozetkapay.com</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Фінтех / Платежі</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="oleksii bush head of retail glovo glovo delivery retail">
+    <div class="chead">
+      <div class="avatar" style="background:#166534">OB</div>
+      <div class="who">
+        <div class="cname">Oleksii Bush</div>
+        <div class="crole">Head of Retail</div>
+        <div class="ccompany"><a href="https://glovoapp.com/ua/uk" target="_blank" rel="noopener">Glovo ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Зацікавлений у знайомстві з Власник & C-Level, Керівники & Менеджери. Ціль: знайомитися з новими цікавими людьми.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">380674707673</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:oleksii.bush@glovoapp.com">oleksii.bush@glovoapp.com</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Логістика та доставка</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="олег мороз керівник пумб пумб банк фінанси">
+    <div class="chead">
+      <div class="avatar" style="background:#374151">ОМ</div>
+      <div class="who">
+        <div class="cname">Олег Мороз</div>
+        <div class="crole">Керівник</div>
+        <div class="ccompany"><a href="https://pumb.ua" target="_blank" rel="noopener">ПУМБ ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Зацікавлений у знайомстві з Власник & C-Level, Спеціалісти & Фахівці, Керівники & Менеджери. Шукає клієнтів або партнерів.</div>
+    <div class="contacts">
+      
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Фінанси / Банківська сфера</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="oleg cherpovodskyi керівник glovo glovo delivery">
+    <div class="chead">
+      <div class="avatar" style="background:#166534">OC</div>
+      <div class="who">
+        <div class="cname">Oleg Cherpovodskyi</div>
+        <div class="crole">Керівник</div>
+        <div class="ccompany"><a href="https://glovoapp.com/ua/uk" target="_blank" rel="noopener">Glovo ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Зацікавлений у знайомстві з Власник & C-Level, Керівники & Менеджери. Ціль: знайомитися з новими цікавими людьми.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">937938769</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:oleg.cherpovodskyi@glovoapp.com">oleg.cherpovodskyi@glovoapp.com</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Логістика та доставка</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="березовська поліна national retail and b2b partnerships manager megogo megogo стрімінг b2b партнерства">
+    <div class="chead">
+      <div class="avatar" style="background:#6d28d9">БП</div>
+      <div class="who">
+        <div class="cname">Березовська Поліна</div>
+        <div class="crole">National Retail and B2B Partnerships Manager</div>
+        <div class="ccompany"><a href="https://megogo.net" target="_blank" rel="noopener">MEGOGO ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Шукає партнерів для продажу передплат MEGOGO в мережі або для продажу передплат під маркетингові активності бізнесу.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">+380635341103</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:polina.berezovska@megogo.net">polina.berezovska@megogo.net</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Медіа / Стрімінг</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="клименко сергій head of business development глобус банк глобус банк bizdev">
+    <div class="chead">
+      <div class="avatar" style="background:#0369a1">КС</div>
+      <div class="who">
+        <div class="cname">Клименко Сергій</div>
+        <div class="crole">Head of Business Development</div>
+        <div class="ccompany"><a href="https://globusbank.com.ua" target="_blank" rel="noopener">Глобус Банк ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Шукає клієнтів та партнерів. Зацікавлений у знайомстві з Власник & C-Level, Керівники & Менеджери.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">+380939469167</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:Sklymenko@globusbank.com.ua">Sklymenko@globusbank.com.ua</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Фінанси / Банківська сфера</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="марія тахтамірова менеджерка з партнерств та фандрейзингу третій армійський корпус армія фандрейзинг партнерства">
+    <div class="chead">
+      <div class="avatar" style="background:#9d174d">МТ</div>
+      <div class="who">
+        <div class="cname">Марія Тахтамірова</div>
+        <div class="crole">Менеджерка з партнерств та фандрейзингу</div>
+        <div class="ccompany"><a href="https://ab3.support" target="_blank" rel="noopener">Третій армійський корпус ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Запускає системні проєкти та масштабні колаборації з українським бізнесом — від ресторанної сфери до великого ритейлу. Шукає партнерства для підтримки бійців.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0954564602</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:mtakhtamitova@ab3.support">mtakhtamitova@ab3.support</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Державний сектор / НКО</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="олександр бутник cco optima (franke coffee) кава franke horeca azk">
+    <div class="chead">
+      <div class="avatar" style="background:#78350f">ОБ</div>
+      <div class="who">
+        <div class="cname">Олександр Бутник</div>
+        <div class="crole">CCO</div>
+        <div class="ccompany"><a href="https://optima-klassic.com.ua" target="_blank" rel="noopener">Optima (Franke Coffee) ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Офіційний представник Franke Coffee Systems в Україні. 15+ років допомагає мережам перетворювати каву на прибутковий напрямок: суперавтомати, self-service, сервіс по всій країні. Шукає ритейл-мережі, АЗК, HoReCa та девелоперів.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0969111062</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:o.butnik@optima-klassic.com.ua">o.butnik@optima-klassic.com.ua</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>HoReCa / Ритейл / B2B</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="oleksandra halaziuk director q-commerce glovo glovo qcommerce delivery">
+    <div class="chead">
+      <div class="avatar" style="background:#166534">OH</div>
+      <div class="who">
+        <div class="cname">Oleksandra Halaziuk</div>
+        <div class="crole">Director Q-commerce</div>
+        <div class="ccompany"><a href="https://glovoapp.com/ua/uk" target="_blank" rel="noopener">Glovo ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Зацікавлена у знайомстві з Власник & C-Level, Керівники & Менеджери. Ціль: знайомитися з новими цікавими людьми.</div>
+    <div class="contacts">
+      
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Логістика та доставка</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="влада шумейко head of kam · head of category home&beauty kasta+ kasta kam категорійний менеджмент">
+    <div class="chead">
+      <div class="avatar" style="background:#0e7490">ВШ</div>
+      <div class="who">
+        <div class="cname">Влада Шумейко</div>
+        <div class="crole">Head of KAM · Head of Category Home&Beauty</div>
+        <div class="ccompany"><a href="https://kasta.ua" target="_blank" rel="noopener">Kasta+ ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Шукає потенційних партнерів для співпраці. Зацікавлена у знайомстві з Власник & C-Level, Керівники & Менеджери.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0672184904</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:v.shumeyko@kasta.ua">v.shumeyko@kasta.ua</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Електронна комерція (e-commerce)</span></div>
+  </div>
+  <div class="card" data-category="specialist" data-search="maria zeikan менеджер utec group logistics утек">
+    <div class="chead">
+      <div class="avatar" style="background:#374151">MZ</div>
+      <div class="who">
+        <div class="cname">Maria Zeikan</div>
+        <div class="crole">Менеджер</div>
+        <div class="ccompany"><a href="https://utecgroup.com.ua" target="_blank" rel="noopener">UTEC GROUP ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Спеціалісти & Фахівці</span>
+    </div>
+    <div class="pitch">Експерт у логістиці. Зацікавлена у знайомстві з Власник & C-Level, Керівники & Менеджери.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">+380971877726</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:maryazeykan@gmail.com">maryazeykan@gmail.com</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Логістика</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="руслан кудря керівник розвитку торгівельної мережі аврора тм аврора локації оренда будівництво">
+    <div class="chead">
+      <div class="avatar" style="background:#991b1b">РК</div>
+      <div class="who">
+        <div class="cname">Руслан Кудря</div>
+        <div class="crole">Керівник розвитку торгівельної мережі</div>
+        <div class="ccompany"><a href="https://avrora.ua" target="_blank" rel="noopener">АВРОРА ТМ ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Під моїм керівництвом відкрито понад 1800 торгівельних точок ТМ АВРОРА, і особисто понад 350. Експерт у пошуку та оцінці локацій під цільового клієнта. Шукає партнерів в галузі оренди і будівництва.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">099 131 4050, 073 131 4050</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:kudria.ruslan@gmail.com">kudria.ruslan@gmail.com</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Ритейл / Нерухомість</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="сергій карпюк business development manager monobank monobank mono партнерства b2b">
+    <div class="chead">
+      <div class="avatar" style="background:#1e3a5f">СК</div>
+      <div class="who">
+        <div class="cname">Сергій Карпюк</div>
+        <div class="crole">Business Development Manager</div>
+        <div class="ccompany"><a href="https://monobank.ua" target="_blank" rel="noopener">monobank ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">5+ років у продажах, розвитку бізнесу та операційному управлінні. Відповідає за ключові партнерства в mono. Зацікавлений у знайомстві з Власник & C-Level, Спеціалісти & Фахівці, Керівники & Менеджери.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">+380668356195</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:serhii.karpiuk@monobank.ua">serhii.karpiuk@monobank.ua</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Фінансові послуги</span></div>
+  </div>
+  <div class="card" data-category="clevel" data-search="ліна сівура cmo pricer24 pricer24 аналітика цінова ecommerce">
+    <div class="chead">
+      <div class="avatar" style="background:#7e22ce">ЛС</div>
+      <div class="who">
+        <div class="cname">Ліна Сівура</div>
+        <div class="crole">CMO</div>
+        <div class="ccompany"><a href="https://pricer24.com" target="_blank" rel="noopener">Pricer24 ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag clevel">Власник & C-Level</span>
+    </div>
+    <div class="pitch">Pricer24 — платформа цінової і асортиментної аналітики для e-commerce. Робить аналітику для Rozetka, Comfy, Епіцентра та інших лідерів ринку. Шукає партнерів та клієнтів.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0933434185</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:L.sivura@pricer24.com">L.sivura@pricer24.com</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Електронна комерція (e-commerce)</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="аліна горєлова chief commercial officer цитрус цитрус citrus cco ритейл">
+    <div class="chead">
+      <div class="avatar" style="background:#1a1a2e">АГ</div>
+      <div class="who">
+        <div class="cname">Аліна Горєлова</div>
+        <div class="crole">Chief Commercial Officer</div>
+        <div class="ccompany"><a href="https://citrus.ua" target="_blank" rel="noopener">Цитрус ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Зацікавлена у знайомстві з Власник & C-Level, Спеціалісти & Фахівці, Керівники & Менеджери. Ціль: знайомитися з новими цікавими людьми.</div>
+    <div class="contacts">
+      
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Ритейл / Електроніка</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="роман олиник head of business development пумб пумб fuib bnpl лояльність партнерства">
+    <div class="chead">
+      <div class="avatar" style="background:#0369a1">РО</div>
+      <div class="who">
+        <div class="cname">Роман Олиник</div>
+        <div class="crole">Head of Business Development</div>
+        <div class="ccompany"><a href="https://pumb.ua" target="_blank" rel="noopener">ПУМБ ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">B2B2C: сервіси «Сплачуйте частинами» та програми лояльності для партнерських каналів. Експерт у BNPL, програмах лояльності, партнерських екосистемах, кешбеку та лідогенерації. Шукає стратегічних партнерів.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">+380503855404</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:Roman.Oliynik@fuib.com">Roman.Oliynik@fuib.com</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Фінанси / Банківська сфера</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="mykhailo kolesnyk head of retail and b2b partnerships megogo megogo retail b2b партнерства">
+    <div class="chead">
+      <div class="avatar" style="background:#6d28d9">МК</div>
+      <div class="who">
+        <div class="cname">Mykhailo Kolesnyk</div>
+        <div class="crole">Head of Retail and B2B Partnerships</div>
+        <div class="ccompany"><a href="https://megogo.net" target="_blank" rel="noopener">MEGOGO ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Шукає клієнтів або партнерів. Зацікавлений у знайомстві з Власник & C-Level, Спеціалісти & Фахівці, Керівники & Менеджери.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0667077600</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:m.kolesnyk@megogo.net">m.kolesnyk@megogo.net</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Медіа / Стрімінг</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="svitlana klochkova business development and sales specialist rozetka rozetka bizdev sales">
+    <div class="chead">
+      <div class="avatar" style="background:#b91c1c">SK</div>
+      <div class="who">
+        <div class="cname">Svitlana Klochkova</div>
+        <div class="crole">Business Development and Sales Specialist</div>
+        <div class="ccompany"><a href="https://rozetka.com.ua" target="_blank" rel="noopener">Rozetka ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Зацікавлена у знайомстві з Власник & C-Level. Ціль: обмін знаннями/ідеями.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0504129412</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:klochkova@rozetka.ua">klochkova@rozetka.ua</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Електронна комерція (e-commerce)</span></div>
+  </div>
+  <div class="card" data-category="clevel" data-search="микита шелест coo цитрус цитрус citrus coo">
+    <div class="chead">
+      <div class="avatar" style="background:#1a1a2e">МШ</div>
+      <div class="who">
+        <div class="cname">Микита Шелест</div>
+        <div class="crole">COO</div>
+        <div class="ccompany"><a href="https://citrus.ua" target="_blank" rel="noopener">Цитрус ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag clevel">Власник & C-Level</span>
+    </div>
+    <div class="pitch">Зацікавлений у знайомстві з Власник & C-Level. Ціль: розширити свою професійну мережу.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">930319080</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:shelest_mv@citrus.ua">shelest_mv@citrus.ua</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Ритейл / Електроніка</span></div>
+  </div>
+  <div class="card" data-category="clevel" data-search="іван чивкін виконавчий директор антошка антошка дитячий ритейл">
+    <div class="chead">
+      <div class="avatar" style="background:#7c2d12">ІЧ</div>
+      <div class="who">
+        <div class="cname">Іван Чивкін</div>
+        <div class="crole">Виконавчий директор</div>
+        <div class="ccompany"><a href="https://antoshka.ua" target="_blank" rel="noopener">Антошка ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag clevel">Власник & C-Level</span>
+    </div>
+    <div class="pitch">Зацікавлений у знайомстві з Власник & C-Level. Ціль: розширити свою професійну мережу.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:ivan.chyvkin@antoshka.ua">ivan.chyvkin@antoshka.ua</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Ритейл / Дитячі товари</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="artur radionov business development manager kfc ukraine kfc ресторан оренда локації">
+    <div class="chead">
+      <div class="avatar" style="background:#b45309">AR</div>
+      <div class="who">
+        <div class="cname">Artur Radionov</div>
+        <div class="crole">Business Development Manager</div>
+        <div class="ccompany"><a href="https://kfc.ua" target="_blank" rel="noopener">KFC Ukraine ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Шукає площі під оренду для ресторанів KFC. Зацікавлений у знайомстві з Власник & C-Level, Спеціалісти & Фахівці, Керівники & Менеджери.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0637547618</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:Aradionov@grgua.com">Aradionov@grgua.com</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Харчування та HoReCa</span></div>
+  </div>
+  <div class="card" data-category="clevel" data-search="олег смирнов owner retail praktik консалтинг стратегія ритейл">
+    <div class="chead">
+      <div class="avatar" style="background:#374151">ОС</div>
+      <div class="who">
+        <div class="cname">Олег Смирнов</div>
+        <div class="crole">Owner</div>
+        <div class="ccompany"><a href="https://retailpraktik.com" target="_blank" rel="noopener">Retail Praktik ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag clevel">Власник & C-Level</span>
+    </div>
+    <div class="pitch">Експерт у стратегічному консалтингу. Зацікавлений у знайомстві з Власник & C-Level, Керівники & Менеджери. Ціль: обмін знаннями/ідеями.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0675232467</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:1@retailpraktik.com">1@retailpraktik.com</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Консалтинг / Ритейл</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="светлана бабенко керівник відділу зовнішніх проєктів moyo moyo проєкти">
+    <div class="chead">
+      <div class="avatar" style="background:#0f766e">СБ</div>
+      <div class="who">
+        <div class="cname">Светлана Бабенко</div>
+        <div class="crole">Керівник відділу зовнішніх проєктів</div>
+        <div class="ccompany"><a href="https://moyo.ua" target="_blank" rel="noopener">MOYO ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Зацікавлена у знайомстві з Керівники & Менеджери. Ціль: знайомитися з новими цікавими людьми.</div>
+    
+    <div class="industry-row"><span class="industry-dot"></span><span>Ритейл / Електроніка</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="олена губарєва team lead kasta+ kasta team lead">
+    <div class="chead">
+      <div class="avatar" style="background:#0e7490">ОГ</div>
+      <div class="who">
+        <div class="cname">Олена Губарєва</div>
+        <div class="crole">Team Lead</div>
+        <div class="ccompany"><a href="https://kasta.ua" target="_blank" rel="noopener">Kasta+ ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Зацікавлена у знайомстві з Керівники & Менеджери. Ціль: знайомитися з новими цікавими людьми.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0502250540</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:hubarevaelena5@gmail.com">hubarevaelena5@gmail.com</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Електронна комерція (e-commerce)</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="федякова олена менеджер rozetka rozetka менеджер">
+    <div class="chead">
+      <div class="avatar" style="background:#b91c1c">ФО</div>
+      <div class="who">
+        <div class="cname">Федякова Олена</div>
+        <div class="crole">Менеджер</div>
+        <div class="ccompany"><a href="https://rozetka.com.ua" target="_blank" rel="noopener">Rozetka ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Зацікавлена у знайомстві з Керівники & Менеджери. Ціль: знайомитися з новими цікавими людьми.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:Fediakova.o@rozetka.ua">Fediakova.o@rozetka.ua</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Електронна комерція (e-commerce)</span></div>
+  </div>
+  <div class="card" data-category="clevel" data-search="соболєв олексій директор з розвитку афіна-груп афіна груп розвиток">
+    <div class="chead">
+      <div class="avatar" style="background:#065f46">СО</div>
+      <div class="who">
+        <div class="cname">Соболєв Олексій</div>
+        <div class="crole">Директор з розвитку</div>
+        <div class="ccompany"><a href="https://afina-group.com.ua" target="_blank" rel="noopener">Афіна-Груп ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag clevel">Власник & C-Level</span>
+    </div>
+    <div class="pitch">Зацікавлений у знайомстві з Власник & C-Level. Ціль: знайомитися з новими цікавими людьми.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">+380503682158</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:a.sobolev@afina-group.com.ua">a.sobolev@afina-group.com.ua</a></div>
+    </div>
+  </div>
+  <div class="card" data-category="manager" data-search="соломія масалига заступник ceo пчілка маркет пчілка маркет заступник ceo">
+    <div class="chead">
+      <div class="avatar" style="background:#dc2626">СМ</div>
+      <div class="who">
+        <div class="cname">Соломія Масалига</div>
+        <div class="crole">Заступник CEO</div>
+        <div class="ccompany"><a href="https://pchelka.market" target="_blank" rel="noopener">Пчілка маркет ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Зацікавлена у знайомстві з Керівники & Менеджери. Ціль: знайомитися з новими цікавими людьми.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0668047164</span></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Ритейл</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="микола подолін head of business development puma ukraine puma bizdev спорт одяг">
+    <div class="chead">
+      <div class="avatar" style="background:#1c1917">МП</div>
+      <div class="who">
+        <div class="cname">Микола Подолін</div>
+        <div class="crole">Head of Business Development</div>
+        <div class="ccompany"><a href="https://puma.com/ua" target="_blank" rel="noopener">PUMA Ukraine ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Зацікавлений у знайомстві з Власник & C-Level, Керівники & Менеджери. Ціль: знайомитися з новими цікавими людьми.</div>
+    
+    <div class="industry-row"><span class="industry-dot"></span><span>Ритейл / Спорт</span></div>
+  </div>
+  <div class="card" data-category="specialist" data-search="тетяна тодосійчук комунікаційна менеджерка easypay easypay платежі комунікації">
+    <div class="chead">
+      <div class="avatar" style="background:#0369a1">ТТ</div>
+      <div class="who">
+        <div class="cname">Тетяна Тодосійчук</div>
+        <div class="crole">Комунікаційна менеджерка</div>
+        <div class="ccompany"><a href="https://easypay.ua" target="_blank" rel="noopener">EasyPay ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Спеціалісти & Фахівці</span>
+    </div>
+    <div class="pitch">Зацікавлена у знайомстві з Власник & C-Level, Спеціалісти & Фахівці, Керівники & Менеджери. Ціль: знайомитися з новими цікавими людьми.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0994189254</span></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Фінансові послуги / Fintech</span></div>
+  </div>
+  <div class="card" data-category="clevel" data-search="юлія подолянко chief marketing officer viatec viatec cmo маркетинг">
+    <div class="chead">
+      <div class="avatar" style="background:#6d28d9">ЮП</div>
+      <div class="who">
+        <div class="cname">Юлія Подолянко</div>
+        <div class="crole">Chief Marketing Officer</div>
+        <div class="ccompany"><a href="https://viatec.ua" target="_blank" rel="noopener">VIATEC ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag clevel">Власник & C-Level</span>
+    </div>
+    <div class="pitch">Зацікавлена у знайомстві з Власник & C-Level, Спеціалісти & Фахівці, Керівники & Менеджери.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0638288886</span></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Інновації та технології</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="юрій шишкін head of fmcg department rozetka rozetka fmcg">
+    <div class="chead">
+      <div class="avatar" style="background:#b91c1c">ЮШ</div>
+      <div class="who">
+        <div class="cname">Юрій Шишкін</div>
+        <div class="crole">Head of FMCG department</div>
+        <div class="ccompany"><a href="https://rozetka.com.ua" target="_blank" rel="noopener">Rozetka ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Зацікавлений у знайомстві з Власник & C-Level, Керівники & Менеджери.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0676586468</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:shishkin@rozetka.ua">shishkin@rozetka.ua</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Електронна комерція (e-commerce)</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="андрій казанцев cpo binotel binotel product saas b2b">
+    <div class="chead">
+      <div class="avatar" style="background:#0f766e">АК</div>
+      <div class="who">
+        <div class="cname">Андрій Казанцев</div>
+        <div class="crole">CPO</div>
+        <div class="ccompany"><a href="https://kazancev.com" target="_blank" rel="noopener">Binotel ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Досвід інженера-розробника, підприємця, продакт-менеджера. B2B SaaS, B2B2C маркетплейси, Business Automation, Product Discovery. Прийшов за новими знайомствами та можливістю перевірити власні ідеї.</div>
+    
+    <div class="industry-row"><span class="industry-dot"></span><span>Інновації та технології / SaaS</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="олексій моісеєнко керівник — моісеєнко retail мережа">
+    <div class="chead">
+      <div class="avatar" style="background:#1d4ed8">ОМ</div>
+      <div class="who">
+        <div class="cname">Олексій Моісеєнко</div>
+        <div class="crole">Керівник</div>
+        <div class="ccompany"><a href="#" target="_blank" rel="noopener">— ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">Експерт у побудові Retail мережі. Зацікавлений у знайомстві з Власник & C-Level, Спеціалісти & Фахівці, Керівники & Менеджери. Ціль: обмін знаннями/ідеями.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">0500214101</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:moiseenko.alexei@gmail.com">moiseenko.alexei@gmail.com</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Ритейл</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="marharyta zdioruk менеджер з партнерств checkbox checkbox каса чек прро">
+    <div class="chead">
+      <div class="avatar" style="background:#16a34a">MZ</div>
+      <div class="who">
+        <div class="cname">Marharyta Zdioruk</div>
+        <div class="crole">Менеджер з партнерств</div>
+        <div class="ccompany"><a href="https://checkbox.ua" target="_blank" rel="noopener">Checkbox ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">RAU об'єднує тих, хто будує ритейл майбутнього — і Checkbox буде поруч, щоб кожна каса, кожен чек і кожен магазин працював бездоганно. Експерт у цифрових сервісах для бізнесу. Шукає клієнтів або партнерів.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">+380667098863</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:marharyta.zdioruk@checkbox.ua">marharyta.zdioruk@checkbox.ua</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Фінтех / Цифрові сервіси</span></div>
+  </div>
+  <div class="card" data-category="manager" data-search="dmytro koval керівник rozetkapay rozetkapay payments fintech онлайн оплата">
+    <div class="chead">
+      <div class="avatar" style="background:#7c2d12">DK</div>
+      <div class="who">
+        <div class="cname">Dmytro Koval</div>
+        <div class="crole">Керівник</div>
+        <div class="ccompany"><a href="https://rozetkapay.com" target="_blank" rel="noopener">RozetkaPay ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag">Керівники & Менеджери</span>
+    </div>
+    <div class="pitch">15 років досвіду у FinTech. Експерт у прийомі платежів онлайн. Шукає клієнтів та партнерів. Тема для обговорення: які проблеми найчастіше виникають при онлайн оплаті замовлень?</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">+380504134389</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:d.koval@rozetkapay.com">d.koval@rozetkapay.com</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Електронна комерція / FinTech</span></div>
+  </div>
+  <div class="card" data-category="clevel" data-search="валерія томіленко керівник monobank monobank mono томіленко">
+    <div class="chead">
+      <div class="avatar" style="background:#1e3a5f">ВТ</div>
+      <div class="who">
+        <div class="cname">Валерія Томіленко</div>
+        <div class="crole">Керівник</div>
+        <div class="ccompany"><a href="https://monobank.ua/business/salary" target="_blank" rel="noopener">monobank ↗</a></div>
+      </div>
+    </div>
+    <div class="tags">
+      <span class="shortlisted-badge"><svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M5 4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v18l-7-3-7 3V4z"/></svg> Shortlisted</span>
+      <span class="cat-tag clevel">Власник & C-Level</span>
+    </div>
+    <div class="pitch">Зацікавлена у знайомстві з Власник & C-Level. Шукає клієнтів або партнерів.</div>
+    <div class="contacts">
+      <div class="contact-row"><div class="contact-icon ci-phone"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.7"/></svg></div><span class="contact-val">380509823012</span></div>
+      <div class="contact-row"><div class="contact-icon ci-email"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m2 7 10 7 10-7" stroke="currentColor" stroke-width="1.7"/></svg></div><a class="contact-val" href="mailto:valeriia.tomilenko@monobank.ua">valeriia.tomilenko@monobank.ua</a></div>
+    </div>
+    <div class="industry-row"><span class="industry-dot"></span><span>Фінансові послуги</span></div>
+  </div>
+</div>
+<div class="empty" id="empty">Нічого не знайдено 🔍</div>
+<script>
+let activeFilter = "all";
+let searchQuery = "";
+function filterCards(btn) {
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  activeFilter = btn.dataset.filter;
+  applyFilters();
+}
+function searchCards(q) {
+  searchQuery = q.toLowerCase().trim();
+  applyFilters();
+}
+function applyFilters() {
+  const cards = document.querySelectorAll(".card");
+  let visible = 0;
+  cards.forEach(card => {
+    const catMatch = activeFilter === "all" ||
+      (activeFilter === "manager" && card.dataset.category === "manager") ||
+      (activeFilter === "specialist" && card.dataset.category === "specialist") ||
+      (activeFilter === "clevel" && card.dataset.category === "clevel");
+    const searchMatch = !searchQuery || card.dataset.search.includes(searchQuery);
+    if (catMatch && searchMatch) { card.classList.remove("hidden"); visible++; }
+    else { card.classList.add("hidden"); }
+  });
+  document.getElementById("total-count").textContent = visible;
+  document.getElementById("empty").classList.toggle("show", visible === 0);
+}
+</script>
+</body>
+</html>
